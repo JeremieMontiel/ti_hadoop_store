@@ -6,16 +6,21 @@ require 'logger'
 module TiHadoopStore
   class Railtie < ::Rails::Railtie
     config.ti_hadoop_store = ActiveSupport::OrderedOptions.new
-    config.ti_hadoop_store.logger = Logger.new($stdout)
+    config.ti_hadoop_store.logger = nil
+    config.ti_hadoop_store.databases = nil
   end
 
   class Config
     def self.logger
-      Railtie.config.ti_hadoop_store.logger
+      @logger ||= Railtie.config.ti_hadoop_store.logger || \
+        Rails.respond_to?(:logger) ? Rails.logger : Logger.new($stdout)
     end
 
     def self.databases
-      Rails.configuration.database_configuration
+      @databases ||= Railtie.config.ti_hadoop_store.databases || \
+        if Rails.respond_to?(:configuration)
+          Rails.configuration.database_configuration
+        else {} end
     end
   end
 end

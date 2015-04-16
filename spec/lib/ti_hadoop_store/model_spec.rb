@@ -1,5 +1,5 @@
 # encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'ti_hadoop_store'
 
 describe TiHadoopStore::Model do

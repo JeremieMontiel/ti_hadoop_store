@@ -50,9 +50,10 @@ module TiHadoopStore
     end
 
     def self.query(statement)
+      pool = config && config["pool"] || ""
       Config.logger.info "Impala query:\"#{statement}\""
       Timeout.timeout(timeout / 1000) do
-        connection.query statement
+        connection.query(statement, request_pool: pool)
       end
     end
 
